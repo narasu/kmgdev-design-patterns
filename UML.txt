@@ -1,0 +1,54 @@
+@startuml
+
+skin rose
+
+title KMGDEV - Design Patterns
+
+interface IState {
+  +void Enter()
+  +void Update()
+  +void FixedUpdate()
+  +void Exit()
+}
+
+interface IStateOwner {
+}
+
+interface IPoolable {
+}
+
+
+class ObjectPool {
+  +void AddObject(IPoolable _obj)
+}
+
+abstract Actor {
+  
+}
+
+class Enemy {
+}
+
+class Player {
+}
+
+
+class FiniteStateMachine {
+  -IStateOwner owner
+  -List<IState> states
+}
+
+abstract AbstractState {
+  
+}
+
+
+IStateOwner <-right- FiniteStateMachine
+IStateOwner <|.left. Actor
+
+IState <-up- FiniteStateMachine
+
+Actor <|-- Enemy
+Actor <|-- Player
+
+@enduml
