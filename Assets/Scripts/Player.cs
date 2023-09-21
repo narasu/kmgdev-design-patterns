@@ -13,12 +13,12 @@ public class Player : ActorBase
         Move();
         if (Input.GetMouseButtonDown(0))
         {
-            EventLeftMouseButtonClicked clickEvent = new EventLeftMouseButtonClicked(interactHitMask);
-            if (EventManager.InvokeCallback(clickEvent, out object callback))
+            LeftMouseButtonClickedEvent clickLeftMouseButtonClickedEvent = new LeftMouseButtonClickedEvent(interactHitMask);
+            if (EventManager.InvokeCallback(clickLeftMouseButtonClickedEvent, out object callback))
             {
                 RaycastHit hit = (RaycastHit)callback;
                 
-                hit.transform.GetComponent<IDamageable>()?.TakeDamage(1.0f);
+                //hit.transform.GetComponent<IDamageable>()?.TakeDamage(1.0f);
             }
         }
     }

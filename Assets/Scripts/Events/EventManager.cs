@@ -22,7 +22,7 @@ public static class EventManager
         eventDictionary[_type] = Delegate.Remove(eventDictionary[_type], _function);
     }
 
-    public static void Invoke(IEvent _event)
+    public static void Invoke(object _event)
     {
         if ( !eventDictionary.ContainsKey( _event.GetType() ) )
         {
@@ -32,7 +32,7 @@ public static class EventManager
         eventDictionary[_event.GetType()]?.DynamicInvoke(_event);
     }
 
-    public static bool InvokeCallback(IEvent _event, out object _callback)
+    public static bool InvokeCallback(object _event, out object _callback)
     {
         if ( !eventDictionary.ContainsKey( _event.GetType() ) )
         {

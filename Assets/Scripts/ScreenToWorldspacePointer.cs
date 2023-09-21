@@ -5,7 +5,7 @@ using UnityEngine;
 public class ScreenToWorldspacePointer : MonoBehaviour
 {
     private Camera mainCamera;
-    private Func<EventLeftMouseButtonClicked, object> onClickEventHandler;
+    private Func<LeftMouseButtonClickedEvent, object> onClickEventHandler;
 
     private void Awake()
     {
@@ -15,15 +15,15 @@ public class ScreenToWorldspacePointer : MonoBehaviour
 
     private void OnEnable()
     {
-        EventManager.Subscribe(typeof(EventLeftMouseButtonClicked), onClickEventHandler);
+        EventManager.Subscribe(typeof(LeftMouseButtonClickedEvent), onClickEventHandler);
     }
 
     private void OnDisable()
     {
-        EventManager.Unsubscribe(typeof(EventLeftMouseButtonClicked), onClickEventHandler);
+        EventManager.Unsubscribe(typeof(LeftMouseButtonClickedEvent), onClickEventHandler);
     }
 
-    private object QueryPointerHit(EventLeftMouseButtonClicked _event)
+    private object QueryPointerHit(LeftMouseButtonClickedEvent _event)
     {
         Ray cameraPointRay = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(cameraPointRay, out RaycastHit pointerHit, 99.0f, _event.PointerHitMask))

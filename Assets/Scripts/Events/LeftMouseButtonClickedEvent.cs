@@ -1,11 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-public struct EventLeftMouseButtonClicked : IEvent
+public struct LeftMouseButtonClickedEvent
 {
     public LayerMask PointerHitMask { get; }
 
-    public EventLeftMouseButtonClicked(LayerMask _pointerHitMask)
+    public LeftMouseButtonClickedEvent(LayerMask _pointerHitMask)
     {
         PointerHitMask = _pointerHitMask;
     }
