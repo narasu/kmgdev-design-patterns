@@ -22,10 +22,6 @@ class ObjectPool {
   +void AddObject(IPoolable _obj)
 }
 
-abstract Actor {
-  
-}
-
 class Enemy {
 }
 
@@ -39,16 +35,26 @@ class FiniteStateMachine {
 }
 
 abstract AbstractState {
-  
+  +void Enter()
+  +void Update(float _delta)
+  +void Exit()
 }
 
+class AttackState
+class WeaponSearchState
+class EvadeState
 
 IStateOwner <-right- FiniteStateMachine
-IStateOwner <|.left. Actor
+IStateOwner <|.down. Enemy
 
 IState <-up- FiniteStateMachine
+IState <|.down. AbstractState
 
-Actor <|-- Enemy
-Actor <|-- Player
+AbstractState <|-down- AttackState
+AbstractState <|-down- WeaponSearchState
+AbstractState <|-down- EvadeState
+
+Enemy *-up- FiniteStateMachine
+
 
 @enduml
