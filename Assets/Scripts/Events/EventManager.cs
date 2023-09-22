@@ -39,7 +39,6 @@ public static class EventManager
             _callback = null;
             return false;
         }
-        
         _callback = eventDictionary[_event.GetType()]?.DynamicInvoke(_event);
         return _callback != null;
     }
