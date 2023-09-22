@@ -1,11 +1,14 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// This class casts a ray from the camera to the worldspace on an event call, and returns a RaycastHit
+/// </summary>
 
 public class ScreenToWorldspacePointer : MonoBehaviour
 {
     private Camera mainCamera;
-    private Func<LeftMouseButtonClickedEvent, object> onClickEventHandler;
+    private Func<MousePointerQueryEvent, object> onClickEventHandler;
 
     private void Awake()
     {
@@ -15,15 +18,15 @@ public class ScreenToWorldspacePointer : MonoBehaviour
 
     private void OnEnable()
     {
-        EventManager.Subscribe(typeof(LeftMouseButtonClickedEvent), onClickEventHandler);
+        EventManager.Subscribe(typeof(MousePointerQueryEvent), onClickEventHandler);
     }
 
     private void OnDisable()
     {
-        EventManager.Unsubscribe(typeof(LeftMouseButtonClickedEvent), onClickEventHandler);
+        EventManager.Unsubscribe(typeof(MousePointerQueryEvent), onClickEventHandler);
     }
 
-    private object QueryPointerHit(LeftMouseButtonClickedEvent _event)
+    private object QueryPointerHit(MousePointerQueryEvent _event)
     {
         Ray cameraPointRay = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(cameraPointRay, out RaycastHit pointerHit, 99.0f, _event.PointerHitMask))

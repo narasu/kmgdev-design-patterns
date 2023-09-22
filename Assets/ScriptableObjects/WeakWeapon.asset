@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 311e5ccc45eb4003b1aff7fee02eb0a7, type: 3}
   m_Name: WeakWeapon
   m_EditorClassIdentifier: 
-  Ammo: 0
+  Ammo: 12
+  Damage: 1
+  FireRate: 3

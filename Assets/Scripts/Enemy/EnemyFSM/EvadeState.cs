@@ -2,6 +2,9 @@
 
 namespace EnemyFSM
 {
+    /// <summary>
+    /// State of enemy when it has a weapon but the player is too close. 
+    /// </summary>
     public class EvadeState : AbstractState
     {
         private NavMeshAgent agent;

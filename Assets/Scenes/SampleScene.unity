@@ -580,9 +580,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MovementSpeed: 3
-  interactHitMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!1 &2032863472
 GameObject:
   m_ObjectHideFlags: 0

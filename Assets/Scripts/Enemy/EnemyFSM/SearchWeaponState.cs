@@ -6,6 +6,9 @@ using UnityEngine.AI;
 
 namespace EnemyFSM
 {
+    /// <summary>
+    /// State of enemy when it has no weapon.
+    /// </summary>
     public class SearchWeaponState : AbstractState
     {
         private NavMeshAgent agent;
@@ -19,7 +22,7 @@ namespace EnemyFSM
         {
             agent = (NavMeshAgent)OwnerData.Read(typeof(NavMeshAgent));
             onWeaponSpawnEventHandler = GetWeapon;
-            EventManager.Subscribe(typeof(WeaponSpawnedEvent), onWeaponSpawnEventHandler);
+            //EventManager.Subscribe(typeof(WeaponSpawnedEvent), onWeaponSpawnEventHandler);
         }
 
         public override void Update(float _delta)

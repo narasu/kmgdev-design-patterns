@@ -4,6 +4,10 @@ using UnityEngine.AI;
 
 namespace EnemyFSM
 {
+    /// <summary>
+    /// State of enemy when it has a weapon and is at a safe distance from the player.
+    /// </summary>
+    
     public class AttackState : AbstractState
     {
         private NavMeshAgent agent;
