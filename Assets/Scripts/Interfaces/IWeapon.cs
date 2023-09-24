@@ -1,5 +1,7 @@
 ﻿public interface IWeapon
 {
     int Ammo { get; }
-    void Fire();
+    float Damage { get; }
+    float FireRate { get; }
+    void Fire(float _delta);
 }

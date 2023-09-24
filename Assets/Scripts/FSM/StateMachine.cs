@@ -7,7 +7,7 @@ public class StateMachine
 {
     public IStateRunner Owner { get; }
     private Dictionary<Type, IState> states = new Dictionary<Type, IState>();
-    private IState currentState;
+    public IState CurrentState { get; private set; }
 
     public StateMachine(IStateRunner _owner, params IState[] _states)
     {
@@ -20,7 +20,7 @@ public class StateMachine
 
     public void Update(float _delta)
     {
-        currentState?.Update(_delta);
+        CurrentState?.Update(_delta);
     }
 
     public void AddState(IState _state)
@@ -30,8 +30,8 @@ public class StateMachine
 
     public void SwitchState(Type _newState)
     {
-        currentState?.Exit();
-        currentState = states[_newState];
-        currentState?.Enter();
+        CurrentState?.Exit();
+        CurrentState = states[_newState];
+        CurrentState?.Enter();
     }
 }

@@ -15,19 +15,30 @@ public class Enemy : MonoBehaviour, IStateRunner
     private void Awake()
     {
         ObjectData = new Scratchpad();
-        ObjectData.Write(transform);
-        ObjectData.Write(GetComponent<NavMeshAgent>());
-        ObjectData.Write(new Queue<IWeapon>());
+        ObjectData.Write( GetComponent<NavMeshAgent>() );
+
+        var weaponHandler = new WeaponHandler();
+        ObjectData.Write( weaponHandler );
 
         stateMachine = new StateMachine(this);
-        stateMachine.AddState(new AttackState(ObjectData, stateMachine));
-        stateMachine.AddState(new EvadeState(ObjectData, stateMachine));
-        stateMachine.AddState(new SearchWeaponState(ObjectData, stateMachine));
-        stateMachine.SwitchState(typeof(EvadeState));
+        stateMachine.AddState( new AttackState(ObjectData, stateMachine) );
+        stateMachine.AddState( new EvadeState(ObjectData, stateMachine) );
+        stateMachine.AddState( new SearchWeaponState(ObjectData, stateMachine) );
+        stateMachine.SwitchState( typeof(SearchWeaponState) );
     }
 
     private void Update()
     {
         stateMachine.Update(Time.deltaTime);
+    }
+    
+    private void OnTriggerEnter(Collider _other)
+    {
+        var weaponData = (WeaponData) _other.GetComponent<IPickup>()?.PickUp();
+
+        if (weaponData != null)
+        {
+            EventManager.Invoke( new WeaponPickedUpEvent(weaponData, _other.transform) );
+        }
     }
 }

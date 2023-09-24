@@ -8,5 +8,4 @@ public struct MousePointerQueryEvent
     {
         PointerHitMask = _pointerHitMask;
     }
-
 }

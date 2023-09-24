@@ -1,29 +1,34 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
+using Random = UnityEngine.Random;
 
 public class WeaponSpawner : MonoBehaviour
 {
-    public List<WeaponData> weaponTypes;
-    private float spawnRate = 9.0f;
-    private float currentTime = .0f;
-    
+    [SerializeField] private WeaponPickup PickupPrefab;
+    [SerializeField] private List<WeaponData> weaponTypes;
+    private float spawnRate = 2.0f;
+    private Timer spawnTimer;
+
+    private void Awake()
+    {
+        spawnTimer = new Timer(spawnRate);
+    }
+
     void Update()
     {
-        currentTime += Time.deltaTime;
-        if (currentTime >= spawnRate)
+        spawnTimer.Run(Time.deltaTime, out bool isTimerExpired);
+        if (isTimerExpired)
         {
             SpawnWeapon();
-            currentTime = .0f;
         }
     }
 
     private void SpawnWeapon()
     {
-        GameObject weapon = new GameObject();
-        Collider c = weapon.AddComponent<BoxCollider>();
-        c.isTrigger = true;
+        WeaponPickup pickup = Instantiate(PickupPrefab, new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)), Quaternion.identity);
+        pickup.Create(Util.Pick(weaponTypes));
+        EventManager.Invoke(new WeaponSpawnedEvent(pickup.transform));
     }
 }

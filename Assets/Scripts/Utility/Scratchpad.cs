@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Scratchpad
 {
-    private Dictionary<Type, object> data;
+    private Dictionary<Type, object> data = new Dictionary<Type, object>();
 
     public object Read(Type _type)
     {

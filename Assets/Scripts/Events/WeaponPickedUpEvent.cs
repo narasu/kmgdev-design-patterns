@@ -1,9 +1,13 @@
-﻿public struct WeaponPickedUpEvent
-{
-    public IWeapon Weapon { get; }
+﻿using UnityEngine;
 
-    public WeaponPickedUpEvent(IWeapon _weapon)
+public struct WeaponPickedUpEvent
+{
+    public WeaponData PickedUpWeaponData { get; }
+    public Transform PickupTransform { get; } 
+
+    public WeaponPickedUpEvent(WeaponData _pickedUpWeaponData, Transform _pickupTransform)
     {
-        Weapon = _weapon;
+        PickedUpWeaponData = _pickedUpWeaponData;
+        PickupTransform = _pickupTransform;
     }
 }
