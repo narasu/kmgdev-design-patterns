@@ -1,4 +1,5 @@
-﻿using UnityEngine.AI;
+﻿using UnityEngine;
+using UnityEngine.AI;
 
 namespace EnemyFSM
 {
@@ -15,7 +16,7 @@ namespace EnemyFSM
 
         public override void Enter()
         {
-            
+            Debug.Log("Evading!");
         }
 
         public override void Update(float _delta)

@@ -25,18 +25,22 @@ namespace EnemyFSM
 
         public override void Enter()
         {
-            agent.isStopped = true;
-            Debug.Log("Attacking");
+            agent.ResetPath();
+            Debug.Log("Attacking!");
         }
 
         public override void Update(float _delta)
         {
             weaponHandler.Update(_delta);
+            if (agent.hasPath)
+            {
+                OwnerStateMachine.SwitchState(typeof(EvadeState));
+            }
         }
 
         public override void Exit()
         {
-            agent.isStopped = false;
+            
         }
 
         ~AttackState()

@@ -27,37 +27,33 @@ namespace EnemyFSM
 
         public override void Enter()
         {
-            // GotoNearestPickup();
-            // EventManager.Subscribe(typeof(WeaponSpawnedEvent), onWeaponSpawnEventHandler);
             EventManager.Subscribe(typeof(WeaponPickedUpEvent), onWeaponPickedUpEventHandler);
             Debug.Log("Searching for weapon...");
         }
 
         public override void Update(float _delta)
         {
-            float currentDistance;
             var searchTargets = new Collider[32];
             int n = Physics.OverlapSphereNonAlloc(agent.transform.position, 96.0f, searchTargets, 1 << 8);
             if (n > 0)
             {
                 Vector3 targetPosition = searchTargets[0].transform.position;
-                currentDistance = Vector3.Distance(agent.transform.position, targetPosition);
+                float currentDistance = Vector3.Distance(agent.transform.position, targetPosition);
                 
                 for (int i = 1; i < n && i < searchTargets.Length; i++)
                 {
                     if (Vector3.Distance(agent.transform.position, searchTargets[i].transform.position) < currentDistance)
                     {
                         targetPosition = searchTargets[i].transform.position;
+                        currentDistance = Vector3.Distance(agent.transform.position, targetPosition);
                     }
                 }
-
                 agent.SetDestination(targetPosition);
             }
         }
 
         public override void Exit()
         {
-            // EventManager.Unsubscribe(typeof(WeaponSpawnedEvent), onWeaponSpawnEventHandler);
             EventManager.Unsubscribe(typeof(WeaponPickedUpEvent), onWeaponPickedUpEventHandler);
         }
 

@@ -552,6 +552,7 @@ GameObject:
   - component: {fileID: 1099357803}
   - component: {fileID: 1099357802}
   - component: {fileID: 1099357806}
+  - component: {fileID: 1099357807}
   m_Layer: 7
   m_Name: player
   m_TagString: Untagged
@@ -660,6 +661,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MovementSpeed: 3
+--- !u!208 &1099357807
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099357801}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &2032863472
 GameObject:
   m_ObjectHideFlags: 0
@@ -791,7 +808,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 2032863472}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 4
   m_Speed: 17.43
   m_Acceleration: 12.74
   avoidancePriority: 50
