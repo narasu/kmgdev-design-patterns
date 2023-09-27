@@ -15,6 +15,7 @@ public class WeaponSpawner : MonoBehaviour
     {
         spawnTimer = new Timer(spawnRate);
     }
+    
 
     void Update()
     {

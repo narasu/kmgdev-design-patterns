@@ -19,10 +19,8 @@ namespace EnemyFSM
 
         public SearchWeaponState(Scratchpad _ownerData, StateMachine _stateMachine) : base(_ownerData, _stateMachine)
         {
-            agent = (NavMeshAgent)OwnerData.Read(typeof(NavMeshAgent));
-            //onWeaponSpawnEventHandler = GetNewPickupTarget;
+            agent = OwnerData.Read<NavMeshAgent>();
             onWeaponPickedUpEventHandler = OnWeaponPickedUp;
-            
         }
 
         public override void Enter()
@@ -57,34 +55,8 @@ namespace EnemyFSM
             EventManager.Unsubscribe(typeof(WeaponPickedUpEvent), onWeaponPickedUpEventHandler);
         }
 
-        /*private void GetNewPickupTarget(WeaponSpawnedEvent _event)
-        {
-            searchTargets.Add(_event.SpawnedWeapon);
-            GotoNearestPickup();
-        }*/
-
-        private void GotoNearestPickup()
-        {
-            /*if (searchTargets.Count > 0)
-            {
-                Vector3 targetPosition = searchTargets[0].position;
-                currentDistance = Vector3.Distance(agent.transform.position, targetPosition);
-                
-                for (int i = 1; i < searchTargets.Count; i++)
-                {
-                    if (Vector3.Distance(agent.transform.position, searchTargets[i].position) < currentDistance)
-                    {
-                        targetPosition = searchTargets[i].position;
-                    }
-                }
-
-                agent.SetDestination(targetPosition);
-            }*/
-        }
-
         private void OnWeaponPickedUp(WeaponPickedUpEvent _event)
         {
-            // searchTargets.Remove(_event.PickupTransform);
             Debug.Log("Weapon picked up");
             OwnerStateMachine.SwitchState(typeof(AttackState));
         }

@@ -9,27 +9,27 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour, IStateRunner
 {
     public Scratchpad ObjectData { get; private set; }
-    private StateMachine stateMachine;
+    public StateMachine FSM { get; private set; }
     
 
     private void Awake()
     {
         ObjectData = new Scratchpad();
-        ObjectData.Write( GetComponent<NavMeshAgent>() );
+        ObjectData.Create( GetComponent<NavMeshAgent>() );
 
         var weaponHandler = new WeaponHandler();
-        ObjectData.Write( weaponHandler );
+        ObjectData.Create(weaponHandler);
 
-        stateMachine = new StateMachine(this);
-        stateMachine.AddState( new AttackState(ObjectData, stateMachine) );
-        stateMachine.AddState( new EvadeState(ObjectData, stateMachine) );
-        stateMachine.AddState( new SearchWeaponState(ObjectData, stateMachine) );
-        stateMachine.SwitchState( typeof(SearchWeaponState) );
+        FSM = new StateMachine();
+        FSM.AddState( new AttackState(ObjectData, FSM) );
+        FSM.AddState( new EvadeState(ObjectData, FSM) );
+        FSM.AddState( new SearchWeaponState(ObjectData, FSM) );
+        FSM.SwitchState( typeof(SearchWeaponState) );
     }
 
     private void Update()
     {
-        stateMachine.Update(Time.deltaTime);
+        FSM.Update(Time.deltaTime);
     }
     
     private void OnTriggerEnter(Collider _other)

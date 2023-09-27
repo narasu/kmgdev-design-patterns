@@ -4,57 +4,128 @@ skin rose
 
 title KMGDEV - Design Patterns
 
+' START interface definitions
 interface IState {
-  +void Enter()
-  +void Update()
-  +void FixedUpdate()
-  +void Exit()
-}
-
-interface IStateOwner {
-}
-
-interface IPoolable {
-}
-
-
-class ObjectPool {
-  +void AddObject(IPoolable _obj)
-}
-
-class Enemy {
-}
-
-class Player {
-}
-
-
-class FiniteStateMachine {
-  -IStateOwner owner
-  -List<IState> states
-}
-
-abstract AbstractState {
+  +Scratchpad ObjectData
   +void Enter()
   +void Update(float _delta)
   +void Exit()
 }
 
-class AttackState
-class WeaponSearchState
-class EvadeState
+interface IStateRunner {
+  +Scratchpad ObjectData
+  +StateMachine FSM
+}
 
-IStateOwner <-right- FiniteStateMachine
-IStateOwner <|.down. Enemy
+interface IPickup {
+  +object PickUp()
+}
 
-IState <-up- FiniteStateMachine
+interface IWeapon {
+  +int Ammo
+  +float Damage
+  +float FireRate
+  +void Fire(float _delta)
+}
+
+interface IPoolable {
+}
+
+' END interface definitions
+
+' START event definitions
+/'struct OutOfWeaponsEvent
+struct WeaponOutOfAmmoEvent
+
+struct WeaponSpawnedEvent {
+  +Transform SpawnedWeapon
+}
+struct WeaponPickedUpEvent {
+  +WeaponData PickedUpWeaponData
+  +Transform PickupTransform
+}'/
+' END event definitions
+
+' START class definitions
+static class EventManager {
+  +{static} void Subscribe(Type _type, Delegate _function)
+  +{static} void Unsubscribe(Type _type, Delegate _function)
+  +{static} void Invoke(object _event)
+  +{static} bool InvokeCallback(object _event, out object _callback)
+}
+
+class Scratchpad {
+  -Dictionary<Type, object> pad
+  +void Create(object _data)
+  +T Read<T>()
+  +void Update(object _data)
+  +void Delete(Type _type)
+}
+
+class StateMachine {
+  -Dictionary<Type, IState> states
+  -IState currentState
+  +void Update(float _delta)
+  +void AddState(IState _state)
+  +void SwitchState(Type _nextState)
+}
+
+abstract AbstractState <<IState>> {
+  +StateMachine OwnerStateMachine
+}
+
+class ObjectPool {
+  +void AddObject(IPoolable _obj)
+}
+
+class Enemy <<MonoBehaviour, IStateRunner>> {
+  
+}
+
+class Player <<MonoBehaviour>>
+
+class WeaponSpawner <<MonoBehaviour>>
+
+class WeaponHandler
+
+class WeaponData <<ScriptableObject>>
+
+class Weapon <<IWeapon>> {
+  +new(WeaponData _weaponData)
+}
+
+class WeaponPickup <<IPickup>> {
+}
+
+' END class definitions
+
+class AttackState <<AbstractState>>
+class WeaponSearchState <<AbstractState>>
+class EvadeState <<AbstractState>>
+
+IStateRunner -up-> Scratchpad
+IStateRunner <-left-> StateMachine
+IStateRunner <|.down. Enemy
+
+IState <-up- StateMachine
 IState <|.down. AbstractState
 
 AbstractState <|-down- AttackState
 AbstractState <|-down- WeaponSearchState
 AbstractState <|-down- EvadeState
 
-Enemy *-up- FiniteStateMachine
+Enemy *-up- StateMachine
+Enemy *-right- WeaponHandler
+Enemy *-down- AttackState
+Enemy *-down- EvadeState
+Enemy *-down- WeaponSearchState
+
+WeaponHandler -down-> IWeapon
+IWeapon <|.down. Weapon
+Weapon -right-> WeaponData
+
+IPickup <|.down. WeaponPickup
+Weapondata <-right- WeaponPickup
 
 
 @enduml

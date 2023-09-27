@@ -17,16 +17,17 @@ namespace EnemyFSM
         private Action<OutOfWeaponsEvent> onOutOfWeaponsEventHandler;
         public AttackState(Scratchpad _ownerData, StateMachine _ownerStateMachine) : base(_ownerData, _ownerStateMachine)
         {
-            agent = (NavMeshAgent)OwnerData.Read(typeof(NavMeshAgent));
-            weaponHandler = (WeaponHandler)OwnerData.Read(typeof(WeaponHandler));
+            agent = OwnerData.Read<NavMeshAgent>();
+            weaponHandler = OwnerData.Read<WeaponHandler>();
             onOutOfWeaponsEventHandler = (_event) => OwnerStateMachine.SwitchState(typeof(SearchWeaponState));
-            EventManager.Subscribe(typeof(OutOfWeaponsEvent), onOutOfWeaponsEventHandler);
+            
         }
 
         public override void Enter()
         {
             agent.ResetPath();
             Debug.Log("Attacking!");
+            EventManager.Subscribe(typeof(OutOfWeaponsEvent), onOutOfWeaponsEventHandler);
         }
 
         public override void Update(float _delta)
@@ -39,11 +40,6 @@ namespace EnemyFSM
         }
 
         public override void Exit()
-        {
-            
-        }
-
-        ~AttackState()
         {
             EventManager.Unsubscribe(typeof(OutOfWeaponsEvent), onOutOfWeaponsEventHandler);
         }
