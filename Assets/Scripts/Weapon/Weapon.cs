@@ -6,7 +6,7 @@ public class Weapon : IWeapon
 {
     public int Ammo { get; private set; }
     public float Damage { get; }
-    public float FireRate { get; }
+    private float fireRate;
 
     private Timer fireRateTimer;
 
@@ -14,18 +14,17 @@ public class Weapon : IWeapon
     {
         Ammo = _weaponData.Ammo;
         Damage = _weaponData.Damage;
-        FireRate = _weaponData.FireRate;
-        fireRateTimer = new Timer(1/FireRate);
+        fireRate = _weaponData.FireRate;
+        fireRateTimer = new Timer(1 / fireRate);
     }
-    
+
     public void Fire(float _delta)
     {
         fireRateTimer.Run(_delta, out bool isTimerExpired);
         if (isTimerExpired)
         {
-            // TODO: spawn projectile
             Ammo -= 1;
-            Debug.Log("Bang!");
+            EventManager.Invoke(new WeaponFiredEvent(Damage));
 
             if (Ammo <= 0)
             {

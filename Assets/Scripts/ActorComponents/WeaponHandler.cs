@@ -8,23 +8,25 @@ public class WeaponHandler
     private IWeapon currentWeapon;
     private Action<WeaponPickedUpEvent> onWeaponPickedUpEventHandler;
     private Action<WeaponOutOfAmmoEvent> onWeaponOutOfAmmoEventHandler;
-    private Queue<IWeapon> weaponQueue = new Queue<IWeapon>();
+    private Queue<IWeapon> weaponQueue = new();
+
 
     public WeaponHandler()
     {
         onWeaponPickedUpEventHandler = OnWeaponPickedUp;
         onWeaponOutOfAmmoEventHandler = OnWeaponOutOfAmmo;
-        
+
         EventManager.Subscribe(typeof(WeaponPickedUpEvent), onWeaponPickedUpEventHandler);
         EventManager.Subscribe(typeof(WeaponOutOfAmmoEvent), onWeaponOutOfAmmoEventHandler);
     }
-    
+
     public void Update(float _delta)
     {
         if (currentWeapon == null)
         {
             TryGetNewWeapon();
         }
+
         currentWeapon?.Fire(_delta);
     }
 
@@ -44,10 +46,10 @@ public class WeaponHandler
     {
         TryGetNewWeapon();
     }
-    
+
     private void OnWeaponPickedUp(WeaponPickedUpEvent _event)
     {
-        weaponQueue.Enqueue( new Weapon(_event.PickedUpWeaponData) );
+        weaponQueue.Enqueue(new Weapon(_event.PickedUpWeaponData));
     }
 
     ~WeaponHandler()

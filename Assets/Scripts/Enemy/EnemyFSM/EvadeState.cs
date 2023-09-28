@@ -9,7 +9,9 @@ namespace EnemyFSM
     public class EvadeState : AbstractState
     {
         private NavMeshAgent agent;
-        public EvadeState(Scratchpad _ownerData, StateMachine _ownerStateMachine) : base(_ownerData, _ownerStateMachine)
+
+        public EvadeState(Scratchpad _ownerData, StateMachine _ownerStateMachine) : 
+            base(_ownerData, _ownerStateMachine)
         {
             agent = OwnerData.Read<NavMeshAgent>();
         }
@@ -27,9 +29,6 @@ namespace EnemyFSM
             }
         }
 
-        public override void Exit()
-        {
-            
-        }
+        public override void Exit() { }
     }
 }

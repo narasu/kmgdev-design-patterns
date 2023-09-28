@@ -1,8 +1,13 @@
 @startuml
 
 skin rose
-
 title KMGDEV - Design Patterns
+
+<style> 
+note {
+  BackgroundColor #white
+}
+</style>
 
 ' START interface definitions
 interface IState {
@@ -29,25 +34,17 @@ interface IWeapon {
 }
 
 interface IPoolable {
+  +bool IsActive
+  +void OnEnableObject()
+  +void OnDisableObject()
 }
 
 ' END interface definitions
 
-' START event definitions
-/'struct OutOfWeaponsEvent
-struct WeaponOutOfAmmoEvent
-
-struct WeaponSpawnedEvent {
-  +Transform SpawnedWeapon
-}
-struct WeaponPickedUpEvent {
-  +WeaponData PickedUpWeaponData
-  +Transform PickupTransform
-}'/
-' END event definitions
 
 ' START class definitions
 static class EventManager {
+  -{static} Dictionary<Type,Delegate> eventDictionary
   +{static} void Subscribe(Type _type, Delegate _function)
   +{static} void Unsubscribe(Type _type, Delegate _function)
   +{static} void Invoke(object _event)
@@ -70,62 +67,163 @@ class StateMachine {
   +void SwitchState(Type _nextState)
 }
 
-abstract AbstractState <<IState>> {
+abstract AbstractState {
   +StateMachine OwnerStateMachine
 }
 
-class ObjectPool {
-  +void AddObject(IPoolable _obj)
+class ObjectPool<T:IPoolable> {
+  -List<T> activePool
+  -List<T> inactivePool
+  +T RequestObject()
+  +bool TryGetActiveObjects(out T[] _objects)
+  +void ReturnObjectToPool(T _item)
+  -T AddNewItemToPool()
+  -T ActivateItem(T _item)
 }
 
-class Enemy <<MonoBehaviour, IStateRunner>> {
-  
-}
-
-class Player <<MonoBehaviour>>
+class Enemy <<MonoBehaviour>>
+note top
+  <b>Invokes:</b>
+  WeaponPickedUpEvent
+end note
 
 class WeaponSpawner <<MonoBehaviour>>
+note right
+  <b>Invokes:</b>
+  WeaponSpawnedEvent
+end note
 
-class WeaponHandler
+class WeaponHandler {
+  -IWeapon currentWeapon
+  -Queue<IWeapon> weaponQueue
+  +new()
+  +void Update(float _delta)
+  -void TryGetNewWeapon()
+  ' -void OnWeaponOutOfAmmo(WeaponOutOfAmmoEvent _event)
+  ' -void OnWeaponPickedUp(WeaponPickedUpEvent _event)
+}
+note bottom
+  <b>Subscribed to:</b>
+  WeaponOutOfAmmoEvent
+  WeaponPickedUpEvent
+  <b>Invokes:</b>
+  OutOfWeaponsEvent
+end note
 
-class WeaponData <<ScriptableObject>>
+class WeaponData <<ScriptableObject>> {
+  +int Ammo
+  +float Damage
+}
 
-class Weapon <<IWeapon>> {
+class Weapon {
+  -float fireRate
+  -Timer fireRateTimer
   +new(WeaponData _weaponData)
 }
+note bottom
+  <b>Invokes:</b>
+  WeaponFiredEvent
+  WeaponOutOfAmmoEvent
+end note
 
-class WeaponPickup <<IPickup>> {
+class WeaponPickup <<MonoBehaviour>> {
 }
+
+class BulletManager <<MonoBehaviour>> {
+  -ObjectPool<Projectile> projectilePool
+}
+note right
+  <b>Subscribed to:</b>
+  WeaponFiredEvent
+  BulletDestroyedEvent
+end note
+
+class Projectile {
+  +float Damage
+  -Timer timeUntilHit
+  +void Update(float _delta)
+  -void Hit()
+}
+note bottom
+  <b>Invokes:</b>
+  BulletDestroyedEvent
+end note
+
+class AttackState
+note bottom
+  <b>Subscribed to:</b>
+  OutOfWeaponsEvent
+end note
+
+class WeaponSearchState
+note bottom
+  <b>Subscribed to:</b>
+  OutOfWeaponsEvent
+end note
+
+class EvadeState
 
 ' END class definitions
 
-class AttackState <<AbstractState>>
-class WeaponSearchState <<AbstractState>>
-class EvadeState <<AbstractState>>
+' START event definitions
 
-IStateRunner -up-> Scratchpad
-IStateRunner <-left-> StateMachine
+note right of EventManager 
+  <b>Event Types</b>
+  
+  ===
+  OutOfWeaponsEvent
+  ---
+  WeaponOutOfAmmoEvent
+  ---
+  WeaponSpawnedEvent {
+    +Transform SpawnedWeapon
+  }
+  ---
+  WeaponPickedUpEvent {
+    +WeaponData PickedUpWeaponData
+    +Transform PickupTransform
+  }
+  ---
+  WeaponFiredEvent {
+    +float Damage
+  }
+  ---
+  BulletDestroyedEvent {
+    +Projectile DestroyedBullet
+  }
+end note
+
+' END event definitions
+
+IStateRunner *-up- Scratchpad
+IStateRunner *-left- StateMachine
 IStateRunner <|.down. Enemy
 
 IState <-up- StateMachine
 IState <|.down. AbstractState
 
+StateMachine <-down- AbstractState
 AbstractState <|-down- AttackState
 AbstractState <|-down- WeaponSearchState
 AbstractState <|-down- EvadeState
 
-Enemy *-up- StateMachine
-Enemy *-right- WeaponHandler
+Enemy *-left- WeaponHandler
 Enemy *-down- AttackState
 Enemy *-down- EvadeState
 Enemy *-down- WeaponSearchState
 
-WeaponHandler -down-> IWeapon
+WeaponHandler -left-> IWeapon
 IWeapon <|.down. Weapon
-Weapon -right-> WeaponData
+Weapon -left-> WeaponData
 
+WeaponSpawner -down-> WeaponData
 IPickup <|.down. WeaponPickup
-Weapondata <-right- WeaponPickup
+WeaponData <-left- WeaponPickup
 
+BulletManager *-up- ObjectPool
+BulletManager -left-> Projectile
+
+IPoolable <|.down. Projectile
+IPoolable -right-* ObjectPool
 
 @enduml

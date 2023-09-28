@@ -10,7 +10,7 @@ public class WeaponPickup : MonoBehaviour, IPickup
     {
         weaponData = _weaponData;
     }
-    
+
     public object PickUp()
     {
         Destroy(gameObject);

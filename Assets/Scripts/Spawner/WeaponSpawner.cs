@@ -15,9 +15,9 @@ public class WeaponSpawner : MonoBehaviour
     {
         spawnTimer = new Timer(spawnRate);
     }
-    
 
-    void Update()
+
+    private void Update()
     {
         spawnTimer.Run(Time.deltaTime, out bool isTimerExpired);
         if (isTimerExpired)
@@ -28,7 +28,8 @@ public class WeaponSpawner : MonoBehaviour
 
     private void SpawnWeapon()
     {
-        WeaponPickup pickup = Instantiate(PickupPrefab, new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)), Quaternion.identity);
+        Vector3 randomPosition = new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10));
+        WeaponPickup pickup = Instantiate(PickupPrefab, randomPosition, Quaternion.identity);
         pickup.Create(Util.Pick(weaponTypes));
         EventManager.Invoke(new WeaponSpawnedEvent(pickup.transform));
     }

@@ -5,22 +5,22 @@ using UnityEngine;
 
 public class Scratchpad
 {
-    private Dictionary<Type, object> pad = new Dictionary<Type, object>();
+    private Dictionary<Type, object> pad = new();
 
     public void Create(object _data)
     {
         bool keyIsAvailable = pad.TryAdd(_data.GetType(), _data);
-        
+
         if (!keyIsAvailable)
         {
             Debug.LogWarning($"Can't create: Scratchpad already contains entry of type {_data.GetType()}.");
         }
     }
-    
+
     public T Read<T>()
     {
         bool containsValue = pad.TryGetValue(typeof(T), out object value);
-        
+
         if (!containsValue)
         {
             Debug.LogWarning($"Can't read: Scratchpad does not contain entry of type {typeof(T)}. Returning null.");
@@ -33,7 +33,7 @@ public class Scratchpad
     {
         Type type = _data.GetType();
         bool entryExists = pad.ContainsKey(type);
-        
+
         if (entryExists)
         {
             pad[_data.GetType()] = _data;
@@ -47,7 +47,7 @@ public class Scratchpad
     public void Delete(Type _type)
     {
         bool containsType = pad.ContainsKey(_type);
-        
+
         if (containsType)
         {
             pad.Remove(_type);

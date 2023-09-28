@@ -4,17 +4,13 @@ using UnityEngine;
 public class HealthComponent : MonoBehaviour, IDamageable
 {
     [SerializeField] private float health = 1.0f;
-    public float Health 
-    { 
+
+    public float Health
+    {
         get => health;
         private set => health = value;
     }
-
-    private void Awake()
-    {
-        
-    }
-
+    
     public void TakeDamage(float _damage)
     {
         Health -= _damage;

@@ -1,4 +1,1 @@
-﻿public struct OutOfWeaponsEvent
-{
-    
-}
+﻿public struct OutOfWeaponsEvent { }

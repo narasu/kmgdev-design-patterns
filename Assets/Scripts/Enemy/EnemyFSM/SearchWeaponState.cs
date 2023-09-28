@@ -15,9 +15,10 @@ namespace EnemyFSM
         private NavMeshAgent agent;
         private Action<WeaponSpawnedEvent> onWeaponSpawnEventHandler;
         private Action<WeaponPickedUpEvent> onWeaponPickedUpEventHandler;
-        
 
-        public SearchWeaponState(Scratchpad _ownerData, StateMachine _stateMachine) : base(_ownerData, _stateMachine)
+
+        public SearchWeaponState(Scratchpad _ownerData, StateMachine _stateMachine) : 
+            base(_ownerData, _stateMachine)
         {
             agent = OwnerData.Read<NavMeshAgent>();
             onWeaponPickedUpEventHandler = OnWeaponPickedUp;
@@ -31,21 +32,25 @@ namespace EnemyFSM
 
         public override void Update(float _delta)
         {
-            var searchTargets = new Collider[32];
+            var searchTargets = new Collider[8];
             int n = Physics.OverlapSphereNonAlloc(agent.transform.position, 96.0f, searchTargets, 1 << 8);
             if (n > 0)
             {
                 Vector3 targetPosition = searchTargets[0].transform.position;
                 float currentDistance = Vector3.Distance(agent.transform.position, targetPosition);
-                
+
                 for (int i = 1; i < n && i < searchTargets.Length; i++)
                 {
-                    if (Vector3.Distance(agent.transform.position, searchTargets[i].transform.position) < currentDistance)
+                    Vector3 nextTargetPosition = searchTargets[i].transform.position;
+                    float newDistance = Vector3.Distance(agent.transform.position, nextTargetPosition);
+
+                    if (newDistance < currentDistance)
                     {
-                        targetPosition = searchTargets[i].transform.position;
-                        currentDistance = Vector3.Distance(agent.transform.position, targetPosition);
+                        targetPosition = nextTargetPosition;
+                        currentDistance = newDistance;
                     }
                 }
+
                 agent.SetDestination(targetPosition);
             }
         }

@@ -18,6 +18,7 @@ public class Timer
             currentTime = .0f;
             return;
         }
+
         currentTime += _delta;
         _expired = false;
     }

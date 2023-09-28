@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 public static class EventManager
 {
-    private static Dictionary<Type, Delegate> eventDictionary = new Dictionary<Type, Delegate>();
-    
+    private static Dictionary<Type, Delegate> eventDictionary = new();
+
     public static void Subscribe(Type _type, Delegate _function)
     {
         eventDictionary.TryAdd(_type, null);
@@ -17,13 +17,13 @@ public static class EventManager
         {
             return;
         }
-    
+
         eventDictionary[_type] = Delegate.Remove(eventDictionary[_type], _function);
     }
 
     public static void Invoke(object _event)
     {
-        if ( !eventDictionary.ContainsKey( _event.GetType() ) )
+        if (!eventDictionary.ContainsKey(_event.GetType()))
         {
             return;
         }
@@ -33,11 +33,12 @@ public static class EventManager
 
     public static bool InvokeCallback(object _event, out object _callback)
     {
-        if ( !eventDictionary.ContainsKey( _event.GetType() ) )
+        if (!eventDictionary.ContainsKey(_event.GetType()))
         {
             _callback = null;
             return false;
         }
+
         _callback = eventDictionary[_event.GetType()]?.DynamicInvoke(_event);
         return _callback != null;
     }
